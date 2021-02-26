@@ -1,6 +1,7 @@
 import React from "react";
-import { Avatar, Badge, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Avatar, Badge, Grid, Link, makeStyles, Paper, Typography } from "@material-ui/core";
 import StyledBadge from './StyledBadge';
+import clsx from 'clsx';
 
 const useStyles = makeStyles({
   root: {
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
     borderRadius: '50px',
     backgroundColor: '#259ADB'
   },
+  notRead: {
+    color: '#259ADB'
+  },
   rightSide: {
     paddingLeft: '20px',
   },
@@ -45,14 +49,17 @@ const useStyles = makeStyles({
 });
 
 const CardItem = ({
+  link,
   avatar,
   site,
   date,
   title,
-  description
+  description,
+  read
 }) => {
   const classes = useStyles();
   const smallDate = new Date(date);
+  const [isRead, setIsRead] = React.useState(read);
 
   const getHostname = (url) => {
     return new URL(url).hostname;
@@ -71,9 +78,11 @@ const CardItem = ({
               }}
               badgeContent={<StyledBadge alt="badge-image" src="https://reactjs.org/logo-og.png" />}
             >
-              <Avatar onClick={() => console.log(description)} alt="avatar-image" src={avatar} className={classes.avatar}/>
+              <Avatar alt="avatar-image" src={avatar} className={classes.avatar}/>
             </Badge>
-            <div className={classes.readCircle}/>
+            {!isRead && 
+              <div className={classes.readCircle}/>
+            }
           </Grid>
           <Grid item container className={classes.rightSide} xs={9} sm={10} direction="column">
             <Grid item container justify="space-between" className={classes.cardInfo}>
@@ -83,15 +92,17 @@ const CardItem = ({
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography>
+                <Typography className={clsx(!isRead && classes.notRead)}>
                   {smallDate.getDate()} {smallDate.toLocaleString('en-EN', { month: 'short' })}
                 </Typography>
               </Grid>
             </Grid>
               <Grid item xs={12}>
-                <Typography display="block" noWrap className={classes.cardTitle}>
-                  {title}
-                </Typography>
+                <Link onClick={() => setIsRead(true)} href={link} target="_blank" rel="noreferrer" underline='hover'>
+                  <Typography display="block" noWrap className={classes.cardTitle}>
+                    {title}
+                  </Typography>
+                </Link>
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.cardDescription}>

@@ -19,8 +19,7 @@ const useStyles = makeStyles({
   },
   readCircle: {
     position: 'absolute',
-    bottom: '-35px',
-    left:'15px',
+    bottom: '-35px', left:'15px',
     width: '13px',
     height: '13px',
     borderRadius: '50px',
@@ -45,8 +44,19 @@ const useStyles = makeStyles({
   }
 });
 
-const CardItem = () => {
+const CardItem = ({
+  avatar,
+  site,
+  date,
+  title,
+  description
+}) => {
   const classes = useStyles();
+  const smallDate = new Date(date);
+
+  const getHostname = (url) => {
+    return new URL(url).hostname;
+  }
 
   return (
     <div className={classes.root}>
@@ -59,9 +69,9 @@ const CardItem = () => {
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              badgeContent={<StyledBadge alt="badge" src="https://reactjs.org/logo-og.png" />}
+              badgeContent={<StyledBadge alt="badge-image" src="https://reactjs.org/logo-og.png" />}
             >
-              <Avatar className={classes.avatar} alt="avatar-image" src="https://reactjs.org/logo-og.png" />
+              <Avatar onClick={() => console.log(description)} alt="avatar-image" src={avatar} className={classes.avatar}/>
             </Badge>
             <div className={classes.readCircle}/>
           </Grid>
@@ -69,23 +79,23 @@ const CardItem = () => {
             <Grid item container justify="space-between" className={classes.cardInfo}>
               <Grid item>
                 <Typography noWrap>
-                  site
+                  {getHostname(site)}
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography>
-                  date
+                  {smallDate.getDate()} {smallDate.toLocaleString('en-EN', { month: 'short' })}
                 </Typography>
               </Grid>
             </Grid>
               <Grid item xs={12}>
                 <Typography display="block" noWrap className={classes.cardTitle}>
-                  title Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid quidem, debitis necessitatibus eius aspernatur quis quibusdam odio sed deleniti facere!
+                  {title}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.cardDescription}>
-                  description Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur, molestiae et quia architecto minima nobis consectetur accusamus odit. At deleniti sed error, suscipit molestiae aliquid sint dignissimos! Minima inventore beatae voluptatibus adipisci sed sequi, id exercitationem nihil non iusto quibusdam, enim nobis voluptatem asperiores, hic praesentium unde delectus veritatis deserunt!
+                  {description}
                 </Typography>
               </Grid>
           </Grid>

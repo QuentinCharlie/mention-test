@@ -1,119 +1,71 @@
 import React from "react";
-import { Avatar, Badge, Grid, Link, makeStyles, Paper, Typography } from "@material-ui/core";
-import StyledBadge from './StyledBadge';
-import clsx from 'clsx';
+import { Grid, makeStyles, Paper } from "@material-ui/core";
+import AvatarWithBadge from "../assets/AvatarWithBadge";
+import CardDetails from "./CardDetails";
 
 const useStyles = makeStyles({
   root: {
-    width: '90%',
-    maxWidth: '600px',
-    border: '1px solid #282c34'
+    width: "90%",
+    maxWidth: "600px",
+    border: "1px solid #282c34",
   },
   paper: {
-    padding: '20px',
+    padding: "20px",
   },
   leftSide: {
-    height: '40px',
-    position: 'relative'
-  },
-  avatar: {
+    height: "40px",
+    position: "relative",
   },
   readCircle: {
-    position: 'absolute',
-    bottom: '-35px', left:'15px',
-    width: '13px',
-    height: '13px',
-    borderRadius: '50px',
-    backgroundColor: '#259ADB'
-  },
-  notRead: {
-    color: '#259ADB'
+    position: "absolute",
+    bottom: "-30px",
+    left: "15px",
+    width: "13px",
+    height: "13px",
+    borderRadius: "50px",
+    backgroundColor: "#259ADB",
   },
   rightSide: {
-    paddingLeft: '20px',
+    paddingLeft: "20px",
   },
-  cardInfo: {
-    color: '#A2ADB7',
-    fontSize: '.8rem'
-  },
-  cardTitle: {
-    fontWeight: 'bold',
-    color: '#444444',
-    cursor: 'pointer'
-  },
-  cardDescription: {
-    color: '#8797A5',
-    height: '3rem',
-    overflow: 'auto'
-  }
 });
 
-const CardItem = ({
-  link,
-  avatar,
-  site,
-  date,
-  title,
-  description,
-  read
-}) => {
+const CardItem = ({ link, avatar, site, date, title, description, read }) => {
   const classes = useStyles();
-  const smallDate = new Date(date);
   const [isRead, setIsRead] = React.useState(read);
-
-  const getHostname = (url) => {
-    return new URL(url).hostname;
-  }
 
   return (
     <div className={classes.root}>
       <Paper square className={classes.paper}>
         <Grid container>
-          <Grid item container className={classes.leftSide} xs={2} sm={1}>
-            <Badge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              badgeContent={<StyledBadge alt="badge-image" src="https://reactjs.org/logo-og.png" />}
-            >
-              <Avatar alt="avatar-image" src={avatar} className={classes.avatar}/>
-            </Badge>
-            {!isRead && 
-              <div className={classes.readCircle}/>
-            }
+          <Grid item container xs={2} sm={1} className={classes.leftSide}>
+            <AvatarWithBadge avatar={avatar} />
+            {!isRead && (
+              <Grid item className={classes.readCircle} aria-label="not-read" />
+            )}
           </Grid>
-          <Grid item container className={classes.rightSide} xs={9} sm={10} direction="column">
-            <Grid item container justify="space-between" className={classes.cardInfo}>
-              <Grid item>
-                <Typography noWrap>
-                  {getHostname(site)}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={clsx(!isRead && classes.notRead)}>
-                  {smallDate.getDate()} {smallDate.toLocaleString('en-EN', { month: 'short' })}
-                </Typography>
-              </Grid>
-            </Grid>
-              <Grid item xs={12}>
-                <Link onClick={() => setIsRead(true)} href={link} target="_blank" rel="noreferrer" underline='hover'>
-                  <Typography display="block" noWrap className={classes.cardTitle}>
-                    {title}
-                  </Typography>
-                </Link>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography className={classes.cardDescription}>
-                  {description}
-                </Typography>
-              </Grid>
+          <Grid
+            item
+            container
+            xs={9}
+            sm={10}
+            direction="column"
+            className={classes.rightSide}
+          >
+            <CardDetails
+              link={link}
+              site={site}
+              date={date}
+              title={title}
+              description={description}
+              read={isRead}
+              setIsRead={setIsRead}
+            />
           </Grid>
         </Grid>
       </Paper>
     </div>
   );
-}
+};
 
 export default CardItem;
